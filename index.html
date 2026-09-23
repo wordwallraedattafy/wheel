@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>عجلة الحظ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root{
+    --bg-1:#170B2E;
+    --bg-2:#2A1454;
+    --bg-3:#3B1C6B;
+    --glass:rgba(255,255,255,0.07);
+    --glass-border:rgba(255,255,255,0.14);
+    --ink:#F5F2FF;
+    --ink-dim:#BDB0DE;
+    --gold-1:#FFC94D;
+    --gold-2:#FF8A3D;
+    --pink-1:#FF4FA0;
+    --teal-1:#20E3B2;
+    --danger:#FF6B6B;
+    --radius-lg:28px;
+    --radius-md:18px;
+    --radius-pill:999px;
+    color-scheme: dark;
+  }
+  *{box-sizing:border-box;}
+  html,body{
+    margin:0;
+    min-height:100%;
+  }
+  body{
+    font-family:'Tajawal', sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 700px at 15% -10%, rgba(255,138,61,0.18), transparent 60%),
+      radial-gradient(900px 600px at 100% 10%, rgba(32,227,178,0.14), transparent 55%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+    min-height:100vh;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+    overflow-x:hidden;
+  }
+  .page{
+    max-width:1100px;
+    margin:0 auto;
+    padding:32px 20px 60px;
+  }
+  @media (max-width:480px){
+    .page{padding:20px 14px 40px;}
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    text-align:center;
+    margin-bottom:28px;
+  }
+  .hero .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 16px;
+    border-radius:var(--radius-pill);
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    font-size:14px;
+    color:var(--ink-dim);
+    margin-bottom:14px;
+  }
+  h1.title{
+    font-family:'Baloo Bhaijaan 2', sans-serif;
+    font-size:clamp(34px, 6vw, 58px);
+    font-weight:800;
+    margin:0 0 8px;
+    background:linear-gradient(90deg, var(--gold-1), var(--pink-1) 60%, var(--teal-1));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    line-height:1.15;
+  }
+  .tagline{
+    color:var(--ink-dim);
+    font-size:clamp(15px,2.2vw,18px);
+    margin:0;
+  }
+
+  /* ---------- Generic panel ---------- */
+  .panel{
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    border-radius:var(--radius-lg);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    padding:26px;
+  }
+  @media (max-width:480px){
+    .panel{padding:18px;}
+  }
+  .panel h2{
+    font-family:'Baloo Bhaijaan 2', sans-serif;
+    font-size:22px;
+    margin:0 0 4px;
+  }
+  .panel .hint{
+    color:var(--ink-dim);
+    font-size:14px;
+    margin:0 0 20px;
+  }
+
+  /* ---------- Setup inputs ---------- */
+  .inputs-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin-bottom:22px;
+  }
+  @media (max-width:620px){
+    .inputs-grid{grid-template-columns:1fr;}
+  }
+  .input-row{
+    position:relative;
+    display:flex;
+    align-items:center;
+    background:rgba(0,0,0,0.22);
+    border:1px solid rgba(255,255,255,0.10);
+    border-radius:16px;
+    overflow:hidden;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .input-row:focus-within{
+    border-color:var(--gold-1);
+    background:rgba(0,0,0,0.32);
+  }
+  .input-row .num{
+    flex:0 0 auto;
+    width:34px;
+    height:34px;
+    margin:0 10px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:14px;
+    color:#1A0F33;
+    background:linear-gradient(135deg, var(--gold-1), var(--gold-2));
+  }
+  .input-row input{
+    flex:1 1 auto;
+    background:transparent;
+    border:0;
+    outline:0;
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    font-size:16px;
+    padding:14px 12px 14px 4px;
+    min-width:0;
+  }
+  .input-row input::placeholder{
+    color:rgba(245,242,255,0.35);
+  }
+
+  .setup-footer{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .error-text{
+    color:var(--danger);
+    font-size:14px;
+    margin:0 0 14px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    font-family:'Tajawal', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    border:none;
+    cursor:pointer;
+    border-radius:var(--radius-pill);
+    padding:13px 26px;
+    transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+  }
+  .btn:active{transform:scale(0.96);}
+  .btn:disabled{opacity:.45; cursor:not-allowed; transform:none;}
+  .btn-primary{
+    color:#241239;
+    background:linear-gradient(135deg, var(--gold-1), var(--gold-2));
+    box-shadow:0 10px 24px -8px rgba(255,138,61,0.55);
+  }
+  .btn-primary:hover:not(:disabled){box-shadow:0 14px 28px -8px rgba(255,138,61,0.7);}
+  .btn-large{
+    font-size:18px;
+    padding:16px 44px;
+    letter-spacing:1px;
+  }
+  .btn-secondary{
+    color:var(--ink);
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.18);
+  }
+  .btn-secondary:hover:not(:disabled){background:rgba(255,255,255,0.16);}
+  .btn-ghost{
+    color:var(--ink-dim);
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.16);
+    font-size:13px;
+    padding:9px 14px;
+  }
+  .btn-ghost:hover{color:var(--ink); border-color:rgba(255,255,255,0.3);}
+  .btn-link{
+    background:none;
+    border:none;
+    color:var(--ink-dim);
+    text-decoration:underline;
+    cursor:pointer;
+    font-family:'Tajawal', sans-serif;
+    font-size:13px;
+    padding:6px;
+  }
+  .edit-wrap{
+    text-align:center;
+    margin-bottom:6px;
+  }
+  #editBtn{
+    font-size:16px;
+    padding:14px 32px;
+  }
+
+  /* ---------- Theme picker ---------- */
+  .theme-picker{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .theme-picker .label{
+    color:var(--ink-dim);
+    font-size:13px;
+  }
+  .theme-swatch{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    border:2px solid rgba(255,255,255,0.14);
+    background:rgba(0,0,0,0.22);
+    border-radius:var(--radius-pill);
+    padding:7px 16px 7px 8px;
+    cursor:pointer;
+    font-family:'Tajawal', sans-serif;
+    font-size:13px;
+    color:var(--ink);
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .theme-swatch .swab{
+    width:20px; height:20px;
+    border-radius:50%;
+    flex:0 0 auto;
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,0.35);
+  }
+  .theme-swatch.active{
+    border-color:var(--gold-1);
+    background:rgba(255,201,77,0.12);
+  }
+  .theme-swatch:hover{border-color:rgba(255,255,255,0.35);}
+
+  /* ---------- App section ---------- */
+  .app-section{margin-top:8px;}
+
+  .clock-wrap{
+    text-align:center;
+    margin:6px 0 26px;
+  }
+  .clock-day{
+    font-family:'Baloo Bhaijaan 2', sans-serif;
+    font-size:clamp(20px,3vw,26px);
+    color:var(--gold-1);
+    margin-bottom:2px;
+  }
+  .clock-time{
+    font-family:'Baloo Bhaijaan 2', sans-serif;
+    font-size:clamp(38px,7vw,64px);
+    font-weight:700;
+    letter-spacing:2px;
+    line-height:1.05;
+  }
+  .clock-date{
+    color:var(--ink-dim);
+    font-size:clamp(14px,2vw,17px);
+    margin-top:2px;
+  }
+
+  .app-grid{
+    display:flex;
+    align-items:flex-start;
+    gap:22px;
+  }
+  .wheel-area{
+    order:1;
+    flex:1 1 auto;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .sidebar{
+    order:2;
+    flex:0 0 260px;
+    width:260px;
+  }
+  @media (max-width:800px){
+    .app-grid{flex-direction:column;}
+    .sidebar{width:100%; flex:0 0 auto; order:2;}
+    .wheel-area{order:1;}
+  }
+
+  /* ---------- Wheel ---------- */
+  .wheel-wrap{
+    position:relative;
+    width:min(480px, 92vw);
+    aspect-ratio:1/1;
+    margin:0 auto;
+  }
+  .pointer{
+    position:absolute;
+    top:-14px;
+    left:50%;
+    transform:translateX(-50%);
+    width:0; height:0;
+    border-left:18px solid transparent;
+    border-right:18px solid transparent;
+    border-top:30px solid var(--gold-1);
+    filter:drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    z-index:5;
+  }
+  #wheelCanvas{
+    width:100%;
+    height:100%;
+    display:block;
+    border-radius:50%;
+    box-shadow:0 0 0 8px rgba(255,255,255,0.06), 0 25px 60px -15px rgba(0,0,0,0.6);
+  }
+  .wheel-gloss{
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    pointer-events:none;
+    background:radial-gradient(ellipse 60% 38% at 32% 22%, rgba(255,255,255,0.35), rgba(255,255,255,0) 70%);
+    z-index:3;
+  }
+  .hub{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:78px; height:78px;
+    border-radius:50%;
+    background:linear-gradient(135deg, var(--gold-1), var(--pink-1));
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo Bhaijaan 2', sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:#241239;
+    border:4px solid rgba(23,11,46,0.8);
+    z-index:4;
+  }
+
+  .wheel-controls{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:26px;
+  }
+  @media (max-width:480px){
+    .wheel-controls{gap:10px;}
+    .wheel-controls .btn{flex:1 1 auto; min-width:0;}
+    #spinBtn{flex-basis:100%;}
+  }
+  #spinBtn{animation:pulseGlow 2.4s ease-in-out infinite;}
+  #spinBtn:disabled{animation:none;}
+  @keyframes pulseGlow{
+    0%,100%{box-shadow:0 10px 24px -8px rgba(255,138,61,0.55);}
+    50%{box-shadow:0 10px 30px -4px rgba(255,138,61,0.85);}
+  }
+
+  .result-banner{
+    margin-top:22px;
+    padding:16px 28px;
+    border-radius:var(--radius-md);
+    background:linear-gradient(135deg, rgba(32,227,178,0.18), rgba(255,138,61,0.18));
+    border:1px solid rgba(255,255,255,0.18);
+    text-align:center;
+    font-family:'Baloo Bhaijaan 2', sans-serif;
+    font-size:clamp(18px,3vw,24px);
+    animation:popIn .35s cubic-bezier(.2,1.4,.4,1);
+  }
+  @keyframes popIn{
+    from{opacity:0; transform:scale(.85);}
+    to{opacity:1; transform:scale(1);}
+  }
+
+  /* ---------- Sidebar / history ---------- */
+  .sidebar-panel{
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    border-radius:var(--radius-lg);
+    padding:20px;
+  }
+  .sidebar-panel h3{
+    font-family:'Baloo Bhaijaan 2', sans-serif;
+    font-size:18px;
+    margin:0 0 14px;
+  }
+  .history-list{
+    list-style:none;
+    margin:0 0 14px;
+    padding:0;
+    max-height:360px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  @media (max-width:800px){
+    .history-list{max-height:220px;}
+  }
+  .history-list li{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:rgba(0,0,0,0.22);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:12px;
+    padding:9px 12px;
+    font-size:14px;
+  }
+  .history-list li .dot{
+    flex:0 0 auto;
+    width:9px; height:9px;
+    border-radius:50%;
+  }
+  .history-list li .txt{
+    flex:1 1 auto;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .history-list li .idx{
+    flex:0 0 auto;
+    color:var(--ink-dim);
+    font-size:12px;
+  }
+  .empty-note{
+    color:var(--ink-dim);
+    font-size:13px;
+    text-align:center;
+    padding:14px 0;
+  }
+  .sidebar-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .sidebar-actions .btn{flex:1 1 auto;}
+  .sidebar-collapsed .history-list,
+  .sidebar-collapsed .empty-note{display:none;}
+
+  .toast{
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:rgba(20,10,40,0.95);
+    border:1px solid rgba(255,255,255,0.18);
+    color:var(--ink);
+    padding:12px 22px;
+    border-radius:var(--radius-pill);
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease;
+    z-index:50;
+  }
+  .toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  a.dl-link{display:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    #spinBtn{animation:none;}
+    .result-banner{animation:none;}
+  }
+</style>
+</head>
+<body>
+<div class="page" id="page">
+
+  <header class="hero">
+    <span class="badge">🎡 قرعة عشوائية عادلة</span>
+    <h1 class="title">عجلة الحظ</h1>
+    <p class="tagline">أدخل خياراتك، اضغط GO، ثم أدر العجلة واترك القدر يختار</p>
+  </header>
+
+  <!-- ============ SETUP ============ -->
+  <section id="setup" class="panel setup-panel">
+    <h2>أضف خياراتك</h2>
+    <p class="hint">من ٢ إلى ٨ خيارات — المربعات الفارغة لن تظهر في العجلة</p>
+
+    <div class="inputs-grid" id="inputsGrid"></div>
+
+    <p class="error-text" id="setupError" hidden>الرجاء إدخال خيارين على الأقل لتبدأ العجلة</p>
+
+    <div class="setup-footer">
+      <span class="hint" style="margin:0;">جاهز؟</span>
+      <button class="btn btn-primary btn-large" id="goBtn">GO</button>
+    </div>
+  </section>
+
+  <!-- ============ APP (wheel + sidebar) ============ -->
+  <section id="app" class="app-section" hidden>
+
+    <div class="edit-wrap">
+      <button class="btn btn-primary" id="editBtn">تعديل الخيارات</button>
+    </div>
+
+    <div class="clock-wrap">
+      <div class="clock-day" id="clockDay"></div>
+      <div class="clock-time" id="clockTime"></div>
+      <div class="clock-date" id="clockDate"></div>
+    </div>
+
+    <div class="app-grid">
+
+      <aside class="sidebar">
+        <div class="sidebar-panel" id="sidebarPanel">
+          <h3>سجل النتائج</h3>
+          <ul class="history-list" id="historyList"></ul>
+          <p class="empty-note" id="historyEmpty">لم تُسجَّل أي نتيجة بعد</p>
+          <div class="sidebar-actions">
+            <button class="btn btn-ghost" id="clearBtn">مسح</button>
+            <button class="btn btn-ghost" id="showBtn">إظهار</button>
+            <button class="btn btn-ghost" id="hideBtn">إخفاء</button>
+          </div>
+        </div>
+      </aside>
+
+      <div class="wheel-area">
+        <div class="theme-picker">
+          <span class="label">لون العجلة:</span>
+          <button class="theme-swatch active" id="themeRainbowBtn" type="button">
+            <span class="swab" style="background:conic-gradient(from 0deg, #FF6B6B, #FFC94D, #20E3B2, #4CC9F0, #FF4FA0, #8C6BFF, #FF6B6B);"></span>
+            قوس قزح
+          </button>
+          <button class="theme-swatch" id="themeBlackBtn" type="button">
+            <span class="swab" style="background:#0d0d0d;"></span>
+            أسود
+          </button>
+        </div>
+        <div class="wheel-wrap">
+          <div class="pointer"></div>
+          <canvas id="wheelCanvas" width="960" height="960"></canvas>
+          <div class="wheel-gloss"></div>
+          <div class="hub" id="hub">START</div>
+        </div>
+
+        <div class="wheel-controls">
+          <button class="btn btn-primary btn-large" id="spinBtn">START</button>
+          <button class="btn btn-secondary" id="saveImgBtn">حفظ صورة</button>
+          <button class="btn btn-secondary" id="shareBtn">مشاركة</button>
+        </div>
+
+        <div class="result-banner" id="resultBanner" hidden></div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<a class="dl-link" id="dlLink" download="عجلة-الحظ.png"></a>
+
+<script>
+(function(){
+  "use strict";
+
+  var MAX_OPTIONS = 8;
+  var REPEAT_CHANCE = 0.20; // 20% chance the spin lands on this visit's randomly-assigned "repeat" option
+
+  var PALETTE_RAINBOW = [
+    "#FF6B6B", "#FFC94D", "#20E3B2", "#4CC9F0",
+    "#FF4FA0", "#8C6BFF", "#FF9F45", "#2EC4B6"
+  ];
+  var PALETTE_BLACK = [
+    "#0A0A0A", "#161616", "#222222", "#0A0A0A",
+    "#1C1C1C", "#0F0F0F", "#242424", "#131313"
+  ];
+  var wheelTheme = 'rainbow'; // 'rainbow' | 'black'
+  function getPalette(){ return wheelTheme === 'black' ? PALETTE_BLACK : PALETTE_RAINBOW; }
+  function getLabelColor(){ return wheelTheme === 'black' ? '#FFD166' : '#1A0F33'; }
+
+  function hexToRgb(hex){
+    var h = hex.replace('#', '');
+    if (h.length === 3){ h = h.split('').map(function(c){return c+c;}).join(''); }
+    var num = parseInt(h, 16);
+    return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+  }
+  function shadeRgb(rgb, percent){
+    // percent negative = darker, positive = lighter
+    var t = percent < 0 ? 0 : 255;
+    var p = Math.abs(percent) / 100;
+    return {
+      r: Math.round((t - rgb.r) * p + rgb.r),
+      g: Math.round((t - rgb.g) * p + rgb.g),
+      b: Math.round((t - rgb.b) * p + rgb.b)
+    };
+  }
+
+  /* ---------------- Setup inputs ---------------- */
+  var inputsGrid = document.getElementById('inputsGrid');
+  var inputs = [];
+  for (var i = 0; i < MAX_OPTIONS; i++) {
+    var row = document.createElement('div');
+    row.className = 'input-row';
+    var num = document.createElement('span');
+    num.className = 'num';
+    num.textContent = (i + 1);
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.maxLength = 40;
+    input.placeholder = 'خيار ' + (i + 1) + ' (اختياري)';
+    row.appendChild(num);
+    row.appendChild(input);
+    inputsGrid.appendChild(row);
+    inputs.push(input);
+  }
+
+  var goBtn = document.getElementById('goBtn');
+  var setupError = document.getElementById('setupError');
+  var setupSection = document.getElementById('setup');
+  var appSection = document.getElementById('app');
+  var editBtn = document.getElementById('editBtn');
+
+  var options = []; // current wheel options (array of strings)
+
+  function collectOptions(){
+    return inputs.map(function(inp){ return inp.value.trim(); })
+                 .filter(function(v){ return v.length > 0; });
+  }
+
+  function startApp(opts){
+    options = opts;
+    setupSection.hidden = true;
+    appSection.hidden = false;
+    buildWheel();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  goBtn.addEventListener('click', function(){
+    var opts = collectOptions();
+    if (opts.length < 2){
+      setupError.hidden = false;
+      return;
+    }
+    setupError.hidden = true;
+    startApp(opts);
+  });
+
+  editBtn.addEventListener('click', function(){
+    appSection.hidden = true;
+    setupSection.hidden = false;
+  });
+
+  /* ---------------- Live clock ---------------- */
+  var dayEl = document.getElementById('clockDay');
+  var timeEl = document.getElementById('clockTime');
+  var dateEl = document.getElementById('clockDate');
+
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+
+  function updateClock(){
+    var now = new Date();
+    var dayName = now.toLocaleDateString('ar-SA', { weekday: 'long' });
+    var dateStr = now.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+    var timeStr = pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+    dayEl.textContent = dayName;
+    dateEl.textContent = dateStr;
+    timeEl.textContent = timeStr;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* ---------------- Wheel drawing ---------------- */
+  var canvas = document.getElementById('wheelCanvas');
+  var ctx = canvas.getContext('2d');
+  var LOGICAL_SIZE = 480;
+  var dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = LOGICAL_SIZE * dpr;
+  canvas.height = LOGICAL_SIZE * dpr;
+  ctx.scale(dpr, dpr);
+
+  var currentRotation = 0; // radians, running total
+  var spinning = false;
+  var lastWinnerIndex = null;
+  var repeatIndex = null; // the option favored by the 20% "repeat" chance, re-rolled every visit
+
+  // Stronger, unbiased random float in [0,1) — avoids any perceived pattern from Math.random
+  function randomFloat(){
+    if (window.crypto && window.crypto.getRandomValues){
+      var buf = new Uint32Array(1);
+      window.crypto.getRandomValues(buf);
+      return buf[0] / 4294967296;
+    }
+    return Math.random();
+  }
+
+  function truncateLabel(ctx, text, maxWidth){
+    if (ctx.measureText(text).width <= maxWidth) return text;
+    var t = text;
+    while (t.length > 1 && ctx.measureText(t + '…').width > maxWidth){
+      t = t.slice(0, -1);
+    }
+    return t + '…';
+  }
+
+  function drawWheel(rotation){
+    var size = LOGICAL_SIZE;
+    var cx = size / 2, cy = size / 2;
+    var radius = size / 2 - 6;
+    var n = options.length;
+    var segAngle = (Math.PI * 2) / n;
+
+    ctx.clearRect(0, 0, size, size);
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(rotation);
+
+    var palette = getPalette();
+    var labelColor = getLabelColor();
+
+    for (var i = 0; i < n; i++){
+      var start = i * segAngle;
+      var end = start + segAngle;
+      var color = palette[i % palette.length];
+      var rgb = hexToRgb(color);
+      var darker = shadeRgb(rgb, -30);
+      var lighter = shadeRgb(rgb, 22);
+
+      // radial gradient from center outward: lighter + more transparent near the hub,
+      // richer and fully opaque toward the rim — gives the segment a sense of depth
+      var grad = ctx.createRadialGradient(0, 0, radius * 0.04, 0, 0, radius);
+      grad.addColorStop(0, 'rgba(' + lighter.r + ',' + lighter.g + ',' + lighter.b + ',0.55)');
+      grad.addColorStop(0.55, 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.92)');
+      grad.addColorStop(1, 'rgba(' + darker.r + ',' + darker.g + ',' + darker.b + ',1)');
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, radius, start, end);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = 'rgba(23,11,46,0.55)';
+      ctx.stroke();
+
+      // label
+      var mid = start + segAngle / 2;
+      ctx.save();
+      ctx.rotate(mid);
+      ctx.translate(radius - 22, 0);
+      var flipped = (mid > Math.PI / 2 && mid < Math.PI * 1.5);
+      if (flipped) ctx.rotate(Math.PI);
+      ctx.fillStyle = labelColor;
+      ctx.font = '700 20px Tajawal, sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.textAlign = flipped ? 'left' : 'right';
+      var maxW = radius * 0.62;
+      var label = truncateLabel(ctx, options[i], maxW);
+      ctx.fillText(label, 0, 2);
+      ctx.restore();
+    }
+
+    // subtle radial vignette at the hub for extra depth
+    var hubShadow = ctx.createRadialGradient(0, 0, 0, 0, 0, radius * 0.22);
+    hubShadow.addColorStop(0, 'rgba(0,0,0,0.28)');
+    hubShadow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.fillStyle = hubShadow;
+    ctx.fill();
+
+    // outer ring
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  var themeRainbowBtn = document.getElementById('themeRainbowBtn');
+  var themeBlackBtn = document.getElementById('themeBlackBtn');
+
+  function setTheme(theme){
+    wheelTheme = theme;
+    themeRainbowBtn.classList.toggle('active', theme === 'rainbow');
+    themeBlackBtn.classList.toggle('active', theme === 'black');
+    if (options.length){ drawWheel(currentRotation); }
+  }
+  themeRainbowBtn.addEventListener('click', function(){ setTheme('rainbow'); });
+  themeBlackBtn.addEventListener('click', function(){ setTheme('black'); });
+
+  function buildWheel(){
+    currentRotation = 0;
+    lastWinnerIndex = null;
+    // pick which option benefits from the 20% "repeat" chance this visit — changes every time
+    repeatIndex = Math.floor(randomFloat() * options.length);
+    drawWheel(currentRotation);
+  }
+
+  /* ---------------- Spin logic ---------------- */
+  var spinBtn = document.getElementById('spinBtn');
+  var resultBanner = document.getElementById('resultBanner');
+
+  function pickIndex(){
+    var n = options.length;
+    if (randomFloat() < REPEAT_CHANCE){
+      return repeatIndex;
+    }
+    return Math.floor(randomFloat() * n);
+  }
+
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+
+  function spin(){
+    if (spinning || options.length < 2) return;
+    spinning = true;
+    spinBtn.disabled = true;
+    resultBanner.hidden = true;
+
+    var n = options.length;
+    var segAngle = (Math.PI * 2) / n;
+    var targetIndex = pickIndex();
+
+    var targetMid = targetIndex * segAngle + segAngle / 2;
+    // pointer is fixed at top => angle -PI/2 in our rotation frame
+    var desiredFinalAngle = -Math.PI / 2 - targetMid;
+    desiredFinalAngle = ((desiredFinalAngle % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+
+    var currentMod = ((currentRotation % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+    var delta = ((desiredFinalAngle - currentMod) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2);
+
+    var extraSpins = 5 + Math.floor(randomFloat() * 3); // 5-7 full turns
+    var totalDelta = delta + extraSpins * Math.PI * 2;
+
+    var startAngle = currentRotation;
+    var endAngle = currentRotation + totalDelta;
+    var duration = 4200;
+    var startTime = null;
+
+    function frame(ts){
+      if (startTime === null) startTime = ts;
+      var elapsed = ts - startTime;
+      var t = Math.min(1, elapsed / duration);
+      var eased = easeOutCubic(t);
+      currentRotation = startAngle + (endAngle - startAngle) * eased;
+      drawWheel(currentRotation);
+      if (t < 1){
+        requestAnimationFrame(frame);
+      } else {
+        currentRotation = endAngle;
+        drawWheel(currentRotation);
+        finishSpin(targetIndex);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function finishSpin(index){
+    spinning = false;
+    spinBtn.disabled = false;
+    lastWinnerIndex = index;
+    var winner = options[index];
+    resultBanner.hidden = false;
+    resultBanner.textContent = '🎉 النتيجة: ' + winner;
+    var pal = getPalette();
+    addHistoryEntry(winner, pal[index % pal.length]);
+  }
+
+  spinBtn.addEventListener('click', spin);
+
+  /* ---------------- History / sidebar ---------------- */
+  var historyList = document.getElementById('historyList');
+  var historyEmpty = document.getElementById('historyEmpty');
+  var sidebarPanel = document.getElementById('sidebarPanel');
+  var clearBtn = document.getElementById('clearBtn');
+  var showBtn = document.getElementById('showBtn');
+  var hideBtn = document.getElementById('hideBtn');
+
+  var history = [];
+
+  function loadHistory(){
+    try {
+      var raw = localStorage.getItem('wheelHistory');
+      if (raw) history = JSON.parse(raw);
+    } catch(e){ history = []; }
+  }
+  function saveHistory(){
+    try { localStorage.setItem('wheelHistory', JSON.stringify(history)); } catch(e){}
+  }
+  function renderHistory(){
+    historyList.innerHTML = '';
+    if (history.length === 0){
+      historyEmpty.hidden = false;
+      return;
+    }
+    historyEmpty.hidden = true;
+    history.forEach(function(entry, idx){
+      var li = document.createElement('li');
+      var dot = document.createElement('span');
+      dot.className = 'dot';
+      dot.style.background = entry.color || '#FFC94D';
+      var txt = document.createElement('span');
+      txt.className = 'txt';
+      txt.textContent = entry.text;
+      var order = document.createElement('span');
+      order.className = 'idx';
+      order.textContent = '#' + (history.length - idx);
+      li.appendChild(dot);
+      li.appendChild(txt);
+      li.appendChild(order);
+      historyList.appendChild(li);
+    });
+  }
+
+  function addHistoryEntry(text, color){
+    history.unshift({ text: text, color: color });
+    saveHistory();
+    renderHistory();
+  }
+
+  clearBtn.addEventListener('click', function(){
+    history = [];
+    saveHistory();
+    renderHistory();
+    showToast('تم مسح القائمة');
+  });
+  showBtn.addEventListener('click', function(){
+    sidebarPanel.classList.remove('sidebar-collapsed');
+  });
+  hideBtn.addEventListener('click', function(){
+    sidebarPanel.classList.add('sidebar-collapsed');
+  });
+
+  loadHistory();
+  renderHistory();
+
+  /* ---------------- Save image ---------------- */
+  var saveImgBtn = document.getElementById('saveImgBtn');
+  var dlLink = document.getElementById('dlLink');
+
+  saveImgBtn.addEventListener('click', function(){
+    if (typeof html2canvas === 'undefined'){
+      saveWheelOnly();
+      return;
+    }
+    showToast('جاري تجهيز الصورة...');
+    html2canvas(document.body, {
+      backgroundColor: '#170B2E',
+      scale: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
+      useCORS: true,
+      logging: false
+    }).then(function(fullCanvas){
+      try {
+        var url = fullCanvas.toDataURL('image/png');
+        dlLink.href = url;
+        dlLink.download = 'عجلة-الحظ-الشاشة.png';
+        dlLink.click();
+        showToast('تم حفظ صورة الشاشة كاملة');
+      } catch(e){
+        saveWheelOnly();
+      }
+    }).catch(function(){
+      saveWheelOnly();
+    });
+  });
+
+  function saveWheelOnly(){
+    try {
+      var url = canvas.toDataURL('image/png');
+      dlLink.href = url;
+      dlLink.download = 'عجلة-الحظ.png';
+      dlLink.click();
+      showToast('تم حفظ صورة العجلة');
+    } catch(e){
+      showToast('تعذر حفظ الصورة');
+    }
+  }
+
+  /* ---------------- Share ---------------- */
+  var shareBtn = document.getElementById('shareBtn');
+
+  function b64EncodeUnicode(str){
+    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(m, p1){
+      return String.fromCharCode('0x' + p1);
+    }));
+  }
+  function b64DecodeUnicode(str){
+    return decodeURIComponent(Array.prototype.map.call(atob(str), function(c){
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+  }
+
+  function buildShareUrl(){
+    var payload = JSON.stringify(options);
+    var encoded = b64EncodeUnicode(payload);
+    var base = location.origin + location.pathname;
+    return base + '?data=' + encoded;
+  }
+
+  shareBtn.addEventListener('click', function(){
+    if (options.length < 2){
+      showToast('أضف خيارات أولاً');
+      return;
+    }
+    var url = buildShareUrl();
+    if (navigator.share){
+      navigator.share({
+        title: 'عجلة الحظ',
+        text: 'جرّب عجلة الحظ بهذه الخيارات!',
+        url: url
+      }).catch(function(){});
+    } else if (navigator.clipboard){
+      navigator.clipboard.writeText(url).then(function(){
+        showToast('تم نسخ رابط المشاركة');
+      }).catch(function(){
+        showToast(url);
+      });
+    } else {
+      window.prompt('انسخ الرابط للمشاركة:', url);
+    }
+  });
+
+  /* ---------------- Toast ---------------- */
+  var toastEl = document.getElementById('toast');
+  var toastTimer = null;
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){
+      toastEl.classList.remove('show');
+    }, 2400);
+  }
+
+  /* ---------------- Load shared options from URL ---------------- */
+  (function(){
+    try {
+      var params = new URLSearchParams(location.search);
+      var data = params.get('data');
+      if (data){
+        var decoded = JSON.parse(b64DecodeUnicode(data));
+        if (Array.isArray(decoded) && decoded.length >= 2){
+          decoded.slice(0, MAX_OPTIONS).forEach(function(val, idx){
+            if (inputs[idx]) inputs[idx].value = val;
+          });
+          startApp(decoded.slice(0, MAX_OPTIONS));
+        }
+      }
+    } catch(e){ /* ignore malformed share data */ }
+  })();
+
+})();
+</script>
+</body>
+</html>
